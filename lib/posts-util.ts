@@ -15,12 +15,11 @@ interface Data {
 
 const contentDirectory = path.join(process.cwd(), 'content');
 
-const getPostData = (filename: string) => {
-  const filePath = path.join(contentDirectory, filename);
+export const getPostData = (postIdentifier: string) => {
+  const postSlug = postIdentifier.replace(/\.md$/, '');
+  const filePath = path.join(contentDirectory, postSlug + '.md');
   const fileContent = fs.readFileSync(filePath, 'utf-8');
   const { data, content } = matter(fileContent) as unknown as Data;
-
-  const postSlug = filename.replace(/\.md$/, '');
 
   const postData = {
     slug: postSlug,
@@ -31,8 +30,12 @@ const getPostData = (filename: string) => {
   return postData;
 };
 
+export const getPostFiles = () => {
+  return fs.readdirSync(contentDirectory);
+};
+
 export const getAllPosts = () => {
-  const postFiles = fs.readdirSync(contentDirectory);
+  const postFiles = getPostFiles();
   const allPosts = postFiles.map((postFile) => getPostData(postFile));
 
   const sortedPosts = allPosts.sort((postA, postB) =>

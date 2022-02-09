@@ -4,4 +4,5 @@ export interface Posts {
   excerpt: string;
   date: string;
   slug: string;
+  content: string;
 }
