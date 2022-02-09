@@ -45,7 +45,10 @@ export const NotificationContextProvider: React.FC = (props) => {
   };
 
   useEffect(() => {
-    if (notification) {
+    if (
+      notification &&
+      (notification.status === 'success' || notification.status === 'error')
+    ) {
       timer = setTimeout(() => {
         setNotification(defaulNotificationState);
       }, 5000);
