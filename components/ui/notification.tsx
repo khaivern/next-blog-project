@@ -1,3 +1,5 @@
+import ReactDOM from 'react-dom';
+
 import classes from './notification.module.css';
 
 interface NotificationProps {
@@ -25,11 +27,12 @@ const Notification: React.FC<NotificationProps> = (props) => {
 
   const cssClasses = `${classes.notification} ${statusClasses}`;
 
-  return (
+  return ReactDOM.createPortal(
     <div className={cssClasses}>
       <h2>{title}</h2>
       <p>{message}</p>
-    </div>
+    </div>,
+    document.querySelector('#notifications')!
   );
 };
 

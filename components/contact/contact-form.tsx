@@ -10,10 +10,25 @@ const ContactForm = () => {
   const nameRef = useRef<HTMLInputElement>(null);
   const messageRef = useRef<HTMLTextAreaElement>(null);
 
-  const submitFormHandler: React.FormEventHandler<HTMLFormElement> = async (
-    e
-  ) => {
-    e.preventDefault();
+  const refsAreDefined =
+    nameRef.current && emailRef.current && messageRef.current;
+  const resetInputFields = () => {
+    if (refsAreDefined) {
+      emailRef.current.value = '';
+      nameRef.current.value = '';
+      messageRef.current.value = '';
+    }
+  };
+
+  const sendRequest = async () => {
+    if (!refsAreDefined) {
+      notiCtx.sendNotification({
+        title: 'Internal Server Error',
+        message: 'please try again at a later time',
+        status: 'error',
+      });
+      return;
+    }
     notiCtx.sendNotification({
       title: 'Sending...',
       message: "Your message is on it's way",
@@ -25,9 +40,9 @@ const ContactForm = () => {
         method: 'POST',
         url: '/api/contact',
         data: {
-          name: nameRef.current?.value,
-          email: emailRef.current?.value,
-          message: messageRef.current?.value,
+          name: nameRef.current.value,
+          email: emailRef.current.value,
+          message: messageRef.current.value,
         },
       });
       const data = response.data;
@@ -41,12 +56,24 @@ const ContactForm = () => {
         message: 'Your message has reached our collection base safely',
         status: 'success',
       });
+      resetInputFields();
     } catch (err: any) {
       notiCtx.sendNotification({
         title: 'Noooooo...',
         message: err.message || 'Your message landed somewhere else',
         status: 'error',
       });
+    }
+  };
+
+  const submitFormHandler: React.FormEventHandler<HTMLFormElement> = async (
+    e
+  ) => {
+    e.preventDefault();
+    try {
+      await sendRequest();
+    } catch (err) {
+      console.log(err);
     }
   };
 

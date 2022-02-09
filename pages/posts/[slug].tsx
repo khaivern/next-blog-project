@@ -1,11 +1,20 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
-import React from 'react';
+import Head from 'next/head';
+import React, { Fragment } from 'react';
 import PostContent from '../../components/posts/post-detail/post-content';
 import { getPostData, getPostFiles } from '../../lib/posts-util';
 import { Posts } from '../../models';
 
 const PostDetailPage = ({ post }: { post: Posts }) => {
-  return <PostContent post={post} />;
+  return (
+    <Fragment>
+      <Head>
+        <title>{post.title}</title>
+        <meta name='description' content={post.excerpt} />
+      </Head>
+      <PostContent post={post} />
+    </Fragment>
+  );
 };
 
 export default PostDetailPage;
@@ -23,7 +32,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   };
 };
 
-export const getStaticPaths: GetStaticPaths = async (context) => {
+export const getStaticPaths: GetStaticPaths = async () => {
   const postFileNames = getPostFiles();
 
   const slugs = postFileNames.map((filename) => ({
