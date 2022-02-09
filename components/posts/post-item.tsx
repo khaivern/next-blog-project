@@ -15,7 +15,7 @@ const PostItem: React.FC<Posts> = ({ title, image, excerpt, date, slug }) => {
   const imagePath = `/images/posts/${slug}/${image}`;
 
   const linkPath = `/posts/${slug}`;
-  console.log(imagePath);
+
   return (
     <li className={classes.post}>
       <Link href={linkPath}>
@@ -25,7 +25,7 @@ const PostItem: React.FC<Posts> = ({ title, image, excerpt, date, slug }) => {
               src={imagePath}
               alt={title}
               width={300}
-              height={300}
+              height={200}
               layout='responsive'
             />
           </div>

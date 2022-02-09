@@ -15,7 +15,7 @@ const MainNavigation = () => {
       <nav>
         <ul>
           <li>
-            <Link href='/'>ALL POSTS</Link>
+            <Link href='/posts'>ALL POSTS</Link>
           </li>
           <li>
             <Link href='/contact'>CONTACT</Link>
