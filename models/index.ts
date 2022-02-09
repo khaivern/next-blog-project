@@ -8,7 +8,7 @@ export interface Posts {
 }
 
 export interface Notification {
-  message: string;
-  status: string;
-  error: null | string;
+  title: null | string;
+  message: null | string;
+  status: null | string;
 }

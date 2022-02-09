@@ -3,25 +3,43 @@ import { Notification } from '../models';
 
 let timer: NodeJS.Timeout;
 
+const defaulNotificationState = {
+  title: null,
+  message: null,
+  status: null,
+};
+
+interface ContextState {
+  notification: Notification;
+  sendNotification: (notification: Notification) => void;
+  clearNotification: () => void;
+}
+
 const NotificationContext = createContext({
-  notification: {}, // message, status, error
+  notification: {
+    title: null,
+    message: null,
+    status: null,
+  }, // message, status, error
   sendNotification: (notification: Notification) => {},
   clearNotification: () => {},
-});
+} as ContextState);
 
 export const NotificationContextProvider: React.FC = (props) => {
-  const [notification, setNotification] = useState<Notification | null>(null);
+  const [notification, setNotification] = useState<Notification>(
+    defaulNotificationState
+  );
 
   const sendNotification = (notification: Notification) => {
     setNotification(notification);
   };
 
   const clearNotification = () => {
-    setNotification(null);
+    setNotification(defaulNotificationState);
   };
 
   const context = {
-    notification: { notification },
+    notification: { ...notification },
     sendNotification,
     clearNotification,
   };
@@ -29,7 +47,7 @@ export const NotificationContextProvider: React.FC = (props) => {
   useEffect(() => {
     if (notification) {
       timer = setTimeout(() => {
-        setNotification(null);
+        setNotification(defaulNotificationState);
       }, 5000);
     }
     return () => {

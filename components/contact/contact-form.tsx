@@ -1,9 +1,11 @@
 import axios from 'axios';
-import React, { useRef } from 'react';
+import React, { useContext, useRef } from 'react';
+import NotificationContext from '../../store/notification-context';
 
 import classes from './contact-form.module.css';
 
 const ContactForm = () => {
+  const notiCtx = useContext(NotificationContext);
   const emailRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
   const messageRef = useRef<HTMLTextAreaElement>(null);
@@ -12,18 +14,40 @@ const ContactForm = () => {
     e
   ) => {
     e.preventDefault();
-    const response = await axios({
-      method: 'POST',
-      url: '/api/contact',
-      data: {
-        name: nameRef.current?.value,
-        email: emailRef.current?.value,
-        message: messageRef.current?.value,
-      },
+    notiCtx.sendNotification({
+      title: 'Sending...',
+      message: "Your message is on it's way",
+      status: 'pending',
     });
 
-    const data = response.data;
-    console.log(data);
+    try {
+      const response = await axios({
+        method: 'POST',
+        url: '/api/contact',
+        data: {
+          name: nameRef.current?.value,
+          email: emailRef.current?.value,
+          message: messageRef.current?.value,
+        },
+      });
+      const data = response.data;
+
+      if (response.status !== 201) {
+        throw new Error('Failed to send your message');
+      }
+
+      notiCtx.sendNotification({
+        title: 'Success !!',
+        message: 'Your message has reached our collection base safely',
+        status: 'success',
+      });
+    } catch (err: any) {
+      notiCtx.sendNotification({
+        title: 'Noooooo...',
+        message: err.message || 'Your message landed somewhere else',
+        status: 'error',
+      });
+    }
   };
 
   return (
