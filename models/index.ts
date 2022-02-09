@@ -6,3 +6,9 @@ export interface Posts {
   slug: string;
   content: string;
 }
+
+export interface Notification {
+  message: string;
+  status: string;
+  error: null | string;
+}

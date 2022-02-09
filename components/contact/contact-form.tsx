@@ -1,11 +1,29 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useRef } from 'react';
 
 import classes from './contact-form.module.css';
 
 const ContactForm = () => {
-  const submitFormHandler: React.FormEventHandler<HTMLFormElement> = (e) => {
+  const emailRef = useRef<HTMLInputElement>(null);
+  const nameRef = useRef<HTMLInputElement>(null);
+  const messageRef = useRef<HTMLTextAreaElement>(null);
+
+  const submitFormHandler: React.FormEventHandler<HTMLFormElement> = async (
+    e
+  ) => {
     e.preventDefault();
-    fetch('/api/contact');
+    const response = await axios({
+      method: 'POST',
+      url: '/api/contact',
+      data: {
+        name: nameRef.current?.value,
+        email: emailRef.current?.value,
+        message: messageRef.current?.value,
+      },
+    });
+
+    const data = response.data;
+    console.log(data);
   };
 
   return (
@@ -15,16 +33,16 @@ const ContactForm = () => {
         <div className={classes.controls}>
           <div className={classes.control}>
             <label htmlFor='email'>Your Email</label>
-            <input type='email' id='email' />
+            <input type='email' id='email' ref={emailRef} />
           </div>
           <div className={classes.control}>
             <label htmlFor='name'>Your Name</label>
-            <input type='text' id='name' />
+            <input type='text' id='name' ref={nameRef} />
           </div>
         </div>
         <div className={classes.control}>
           <label htmlFor='message'>Your Message</label>
-          <textarea id='message' rows={5} />
+          <textarea id='message' rows={5} ref={messageRef} />
         </div>
         <div className={classes.actions}>
           <button>Send Message</button>
