@@ -15,6 +15,7 @@ const PostsGrid: React.FC<{ posts: Posts[] }> = ({ posts }) => {
           excerpt={post.excerpt}
           date={post.date}
           slug={post.slug}
+          content={post.content}
         />
       ))}
     </ul>
